@@ -24,25 +24,26 @@ func unzip(src string, dest string) ([]string, error) {
 	}
 	defer r.Close()
 
+	//this should only return a single filename
 	for _, f := range r.File {
 
 		// Store filename/path for returning and using later on
-		fpath := filepath.Join(dest, f.Name)
+		storedPath := filepath.Join(dest, f.Name)
 
-		filenames = append(filenames, fpath)
+		filenames = append(filenames, storedPath)
 
 		if f.FileInfo().IsDir() {
 			// Make Folder
-			os.MkdirAll(fpath, os.ModePerm)
+			os.MkdirAll(storedPath, os.ModePerm)
 			continue
 		}
 
 		// Make File
-		if err = os.MkdirAll(filepath.Dir(fpath), os.ModePerm); err != nil {
+		if err = os.MkdirAll(filepath.Dir(storedPath), os.ModePerm); err != nil {
 			return filenames, err
 		}
 
-		outFile, err := os.OpenFile(fpath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+		outFile, err := os.OpenFile(storedPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
 		if err != nil {
 			return filenames, err
 		}
@@ -63,11 +64,13 @@ func unzip(src string, dest string) ([]string, error) {
 		}
 	}
 
-	fmt.Printf("filenames: %v \n", filenames)
+	fmt.Printf("Filenames extracted: %v \n", filenames)
 	return filenames, nil
 }
 
 func gzipFile(uncompressedName string, compressedString string) {
+
+	fmt.Printf("Gzipping source %v to %v \n", uncompressedName, strings.Replace(compressedString, ".zip", ".gz", -1))
 	// Open file on disk.
 	name := uncompressedName
 	f, _ := os.Open(name)
@@ -76,7 +79,7 @@ func gzipFile(uncompressedName string, compressedString string) {
 	reader := bufio.NewReader(f)
 	content, _ := ioutil.ReadAll(reader)
 
-	// Replace txt extension with gz extension.
+	// Replace .zip extension with gz extension.
 	name = strings.Replace(compressedString, ".zip", ".gz", -1)
 
 	// Open file for writing.
@@ -99,14 +102,14 @@ func main() {
 	}
 
 	for _, f := range files {
-		if strings.HasSuffix(f.Name(), "zip") {
-			fmt.Printf("Decompressing: %v", f.Name())
+		if strings.HasSuffix(f.Name(), ".zip") {
+			fmt.Printf("Decompressing: %v \n", f.Name())
 			newFilename, _ := unzip(f.Name(), "")
 			if len(newFilename) > 0 {
 				gzipFile(newFilename[0], f.Name())
 				os.Remove(newFilename[0])
 			} else {
-				fmt.Printf("No filename found array: %v", newFilename)
+				fmt.Printf("No filename found array: %v \n", newFilename)
 			}
 
 		}
