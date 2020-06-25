@@ -6,7 +6,6 @@ import (
 	"compress/gzip"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -16,6 +15,7 @@ import (
 func Unzip(src string, dest string) ([]string, error) {
 	var filenames []string
 
+	//consider using this reader as input for gzip ... :)
 	r, err := zip.OpenReader(src)
 	if err != nil {
 		return filenames, err
@@ -76,30 +76,24 @@ func GzipFile(uncompressedName string, compressedString string) {
 
 	// Create a Reader and use ReadAll to get all the bytes from the file.
 	reader := bufio.NewReader(f)
-	content, _ := ioutil.ReadAll(reader)
+	//content, _ := ioutil.ReadAll(reader)
 
 	// Replace .zip extension with gz extension.
 	name = strings.Replace(compressedString, ".zip", ".gz", -1)
 
 	// Open file for writing.
-	f, _ = os.Create(name)
+	f1, _ := os.Create(name)
 
 	// Write compressed data.
-	w := gzip.NewWriter(f)
+	w := gzip.NewWriter(f1)
 	w.Name = uncompressedName
 
-	// make chunks of 500 mbyte this saves ram
-	chunkSize := 500000000
-	for i := 0; i < len(content); i += chunkSize {
-		//write in junks and save ram ...
-		fmt.Printf("\rFile %v is [%.2f] Done", uncompressedName, float32(i)/float32(len(content)))
-		if i+chunkSize > len(content) {
-			w.Write(content[i:len(content)])
-		} else {
-			w.Write(content[i : i+chunkSize])
-		}
-
+	if _, err := io.Copy(w, reader); err != nil {
+		fmt.Println(err)
 	}
+
+	f.Close()
+	f1.Close()
 	fmt.Printf("\n")
 
 	w.Close()
