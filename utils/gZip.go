@@ -15,7 +15,7 @@ type GzipAttributes struct {
 }
 
 //GzipFile a file
-func GzipFile(uncompressedName string, compressedString string, attributes *GzipAttributes) {
+func GzipFile(uncompressedName string, compressedString string, attributes *GzipAttributes) string {
 
 	fmt.Printf("Gzipping source %v to %v \n", uncompressedName, strings.Replace(compressedString, ".zip", ".gz", -1))
 	// Open file on disk.
@@ -48,6 +48,8 @@ func GzipFile(uncompressedName string, compressedString string, attributes *Gzip
 
 	// Done.
 	fmt.Printf("Done for %v \n", name)
+
+	return name
 }
 
 //UnGZip consumes source as path extracts to dest Path

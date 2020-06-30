@@ -3,7 +3,6 @@ package utils
 import (
 	"crypto/sha256"
 	"encoding/base64"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -24,6 +23,6 @@ func Sha256(file string) string {
 	uEnc := base64.StdEncoding.EncodeToString(h.Sum(nil))
 	//fmt.Println(uEnc)
 
-	fmt.Printf("%v", uEnc)
+	//fmt.Printf("%v", uEnc)
 	return uEnc
 }
