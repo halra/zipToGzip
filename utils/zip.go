@@ -22,16 +22,15 @@ func Unzip(src string, dest string, password *string) ([]string, error) {
 	//iterrate over all files in the archive
 	for _, f := range r.File {
 
+		if f.FileInfo().IsDir() {
+			// Make Folder
+			//os.MkdirAll(storedPath, os.ModePerm)
+			continue
+		}
 		// Store filename/path for returning and using later on
 		storedPath := filepath.Join(dest, f.Name)
 
 		filenames = append(filenames, storedPath)
-
-		if f.FileInfo().IsDir() {
-			// Make Folder
-			os.MkdirAll(storedPath, os.ModePerm)
-			continue
-		}
 
 		// Make File
 		if err = os.MkdirAll(filepath.Dir(storedPath), os.ModePerm); err != nil {
@@ -55,7 +54,7 @@ func Unzip(src string, dest string, password *string) ([]string, error) {
 		rc.Close()
 
 		if err != nil {
-			return filenames, err
+			return nil, err
 		}
 	}
 
