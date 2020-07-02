@@ -20,7 +20,12 @@ func GzipFile(uncompressedName string, compressedString string, attributes *Gzip
 	fmt.Printf("Gzipping source %v to %v \n", uncompressedName, strings.Replace(compressedString, ".zip", ".gz", -1))
 	// Open file on disk.
 	//name := uncompressedName
-	f, _ := os.Open(uncompressedName)
+	f, e1 := os.Open(uncompressedName)
+
+	if e1 != nil {
+		fmt.Printf("Error on GziüpFile %v \n", e1)
+		return ""
+	}
 
 	// Create a Reader and use ReadAll to get all the bytes from the file.
 	reader := bufio.NewReader(f)
@@ -34,19 +39,22 @@ func GzipFile(uncompressedName string, compressedString string, attributes *Gzip
 
 	// Write compressed data.
 	w := gzip.NewWriter(f1)
-	w.Name = compressedString
+	w.Name = attributes.name
 
-	if _, err := io.Copy(w, reader); err != nil {
+	byteCount, err := io.Copy(w, reader)
+	if err != nil {
 		fmt.Println(err)
 	}
 
+	//close the writer first!
+	w.Close()
 	f.Close()
 	f1.Close()
-	w.Close()
+
 	fmt.Printf("\n")
 
 	// Done.
-	fmt.Printf("Done for %v \n", name)
+	fmt.Printf("Done for %v wrote %v bytes \n", name, byteCount)
 
 	return name
 }

@@ -25,6 +25,7 @@ func Unzip(src string, dest string, password *string) ([]string, error) {
 		if f.FileInfo().IsDir() {
 			// Make Folder
 			//os.MkdirAll(storedPath, os.ModePerm)
+			fmt.Printf("Found DIR skipping entry %v\n", f.Name)
 			continue
 		}
 		// Store filename/path for returning and using later on
@@ -47,13 +48,13 @@ func Unzip(src string, dest string, password *string) ([]string, error) {
 			return filenames, err
 		}
 
-		_, err = io.Copy(outFile, rc)
+		bytesCount, err1 := io.Copy(outFile, rc)
 
 		// Close the file without defer to close before next iteration of loop
 		outFile.Close()
 		rc.Close()
-
-		if err != nil {
+		fmt.Printf("Filenames extracted: %v wrote %v bytes \n", filenames, bytesCount)
+		if err1 != nil {
 			return nil, err
 		}
 	}
