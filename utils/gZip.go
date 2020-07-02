@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -15,12 +16,14 @@ type GzipAttributes struct {
 }
 
 //GzipFile a file
-func GzipFile(uncompressedName string, compressedString string, attributes *GzipAttributes) string {
+func GzipFile(src string, dest string, attributes *GzipAttributes) string {
 
-	fmt.Printf("Gzipping source %v to %v \n", uncompressedName, strings.Replace(compressedString, ".zip", ".gz", -1))
+	var extension = filepath.Ext(dest)
+
+	fmt.Printf("Gzipping source %v to %v \n", src, strings.Replace(dest, ".zip", ".gz", -1))
 	// Open file on disk.
-	//name := uncompressedName
-	f, e1 := os.Open(uncompressedName)
+	//name := src
+	f, e1 := os.Open(src)
 
 	if e1 != nil {
 		fmt.Printf("Error on GziüpFile %v \n", e1)
@@ -32,7 +35,7 @@ func GzipFile(uncompressedName string, compressedString string, attributes *Gzip
 	//content, _ := ioutil.ReadAll(reader)
 
 	// Replace .zip extension with gz extension.
-	name := strings.Replace(compressedString, ".zip", ".gz", -1)
+	name := dest[0:len(dest)-len(extension)] + ".gz"
 
 	// Open file for writing.
 	f1, _ := os.Create(name)

@@ -29,6 +29,7 @@ func Foo() {
 				GzipFile(newFilename[0], f.Name(), gzipAttribs)
 				//fmt.Printf("written %v with hash %v \n", gzippedName, Sha256(gzippedName))
 				os.Remove(newFilename[0])
+				fmt.Printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n")
 			} else {
 				fmt.Printf("No filename found array: %v \n", newFilename)
 			}
