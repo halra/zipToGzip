@@ -12,7 +12,6 @@ import (
 func Unzip(src string, dest string, password *string) ([]string, error) {
 	var filenames []string
 
-	//consider using this reader as input for gzip ... :)
 	r, err := zip.OpenReader(src)
 	if err != nil {
 		return filenames, err
@@ -25,7 +24,7 @@ func Unzip(src string, dest string, password *string) ([]string, error) {
 		if f.FileInfo().IsDir() {
 			// Make Folder
 			//os.MkdirAll(storedPath, os.ModePerm)
-			fmt.Printf("Found DIR skipping entry %v\n", f.Name)
+			fmt.Printf("Detected directory, dir scanning not yet implemented, skipping entry %v\n", f.Name)
 			continue
 		}
 		// Store filename/path for returning and using later on
@@ -59,13 +58,11 @@ func Unzip(src string, dest string, password *string) ([]string, error) {
 		}
 	}
 
-	fmt.Printf("Filenames extracted: %v \n", filenames)
+	//fmt.Printf("Filenames extracted: %v \n", filenames)
 	return filenames, nil
 }
 
-//Zip compresses one or many files into a single zip archive file.
-// Param 1: filename is the output zip file's name.
-// Param 2: files is a list of files to add to the zip.
+//Zip compresses one or more files into a single zip archive
 func Zip(src []string, dest string, password string) error {
 	newZipFile, err := os.Create(dest)
 	if err != nil {
@@ -103,13 +100,9 @@ func addFileToZip(zipWriter *zip.Writer, filename string) error {
 	if err != nil {
 		return err
 	}
-
-	// Using FileInfoHeader() above only uses the basename of the file. If we want
-	// to preserve the folder structure we can overwrite this with the full path.
 	header.Name = filename
 
-	// Change to deflate to gain better compression
-	// see http://golang.org/pkg/archive/zip/#pkg-constants
+	//deflate for better compression
 	header.Method = zip.Deflate
 
 	writer, err := zipWriter.CreateHeader(header)

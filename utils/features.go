@@ -8,9 +8,9 @@ import (
 	"strings"
 )
 
-//Foo print foo
-func Foo() {
-	files, err := ioutil.ReadDir("./") // consider making this windows compatible
+//ZipToGZip converts zip archives in a directory to gzip archives
+func ZipToGZip() {
+	files, err := ioutil.ReadDir("./") // read current dir
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -31,7 +31,7 @@ func Foo() {
 				os.Remove(newFilename[0])
 				fmt.Printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n")
 			} else {
-				fmt.Printf("No filename found array: %v \n", newFilename)
+				fmt.Printf("No filename found is the archive empty?  returned array: %v \n", newFilename)
 			}
 
 		}

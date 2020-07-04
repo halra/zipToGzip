@@ -8,6 +8,7 @@ import (
 	"os"
 )
 
+//Sha256 returns the hash Bse64 encoded
 func Sha256(file string) string {
 	f, err := os.Open(file)
 	if err != nil {
@@ -20,9 +21,6 @@ func Sha256(file string) string {
 		log.Fatal(err)
 	}
 
-	uEnc := base64.StdEncoding.EncodeToString(h.Sum(nil))
-	//fmt.Println(uEnc)
-
-	//fmt.Printf("%v", uEnc)
-	return uEnc
+	b64String := base64.StdEncoding.EncodeToString(h.Sum(nil))
+	return b64String
 }
