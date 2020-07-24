@@ -1,3 +1,3 @@
-module GoLang/zipToGzip
+module github.com/halra/zipToGzip
 
-go 1.13
+go 1.14
