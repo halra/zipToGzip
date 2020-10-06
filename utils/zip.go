@@ -6,6 +6,8 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+
+	"github.com/kjk/lzmadec"
 )
 
 //Unzip the file returns an array with the extracted filenames
@@ -59,6 +61,43 @@ func Unzip(src string, dest string, password *string) ([]string, error) {
 	}
 
 	//fmt.Printf("Filenames extracted: %v \n", filenames)
+	return filenames, nil
+}
+
+//Unzip7z Prototype .... ... this is very rudimentary ...
+func Unzip7z(src string, dest string, password *string) ([]string, error) {
+	var archive *lzmadec.Archive
+	fmt.Println(src)
+	fmt.Println(dest)
+	archive, e := lzmadec.NewArchive("./" + src)
+
+	if e != nil {
+		fmt.Printf("ERROR: %v \n", e)
+	}
+	var filenames []string
+
+	// list all files inside archive
+	//firstFile := archive.Entries[0].Path
+	for _, e := range archive.Entries {
+		fmt.Printf("name: %s, size: %d\n", e.Path, e.Size)
+	}
+
+	//TODO get extension from right file, check if file size is big enough ... this is very rudimentary ...
+	firstFile := archive.Entries[0].Path
+	var extension = filepath.Ext(archive.Entries[1].Path)
+	filenames = append(filenames, firstFile+extension)
+	// extract to a file
+	archive.ExtractToFile(firstFile+extension, firstFile)
+
+	// decompress to in-memory buffer
+	//r, _ := archive.GetFileReader(firstFile)
+	//var buf bytes.Buffer
+	//_, _ = io.Copy(&buf, r)
+	// if not fully read, calling Close() ensures that sub-launched 7z executable
+	// is terminated
+	//r.Close()
+	//fmt.Printf("size of file %s after decompression: %d\n", firstFile, len(buf.Bytes()))
+
 	return filenames, nil
 }
 

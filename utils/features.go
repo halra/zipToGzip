@@ -18,9 +18,12 @@ func ZipToGZip() {
 	var gzipAttribs *GzipAttributes
 	gzipAttribs = new(GzipAttributes)
 	for _, f := range files {
-		if strings.HasSuffix(f.Name(), ".zip") {
+		if strings.HasSuffix(f.Name(), ".zip") || strings.HasSuffix(f.Name(), ".7z") {
 			fmt.Printf("Decompressing: %v \n", f.Name())
 			newFilename, _ := Unzip(f.Name(), "", nil)
+			if strings.HasSuffix(f.Name(), ".7z") {
+				newFilename, _ = Unzip7z(f.Name(), "", nil)
+			}
 
 			if len(newFilename) > 0 {
 				//TODO iter over array and compress all files!
