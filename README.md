@@ -2,7 +2,7 @@
 Converts zip files with single entry to gzip
 
 # Requirements
-´go get github.com/kjk/lzmadec´
+`go get github.com/kjk/lzmadec`
 
 
 # What does it do
