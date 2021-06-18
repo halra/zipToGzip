@@ -1,5 +1,6 @@
 # zipToGzip
 Converts zip files with single entry to gzip
+Version 0.1.1 is a proof of concept and not for production use.
 
 # Requirements
 `go get github.com/kjk/lzmadec`
